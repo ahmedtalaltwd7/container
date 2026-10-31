@@ -1,4 +1,5 @@
 import { addRecord, addRecords, deleteRecord, getAllRecords, updateRecord } from './db.js';
+import { strToU8, zipSync } from 'fflate';
 
 const FIELDS = [
 	{ key: 'containerNumber', label: 'رقم الحاوية', type: 'text' },
@@ -378,6 +379,80 @@ function exportCsv() {
 	exportRecordsCsv(records, 'سجلات-الشحنات.csv', `تم تصدير ${toArabicNumber(records.length)} سجل إلى CSV.`);
 }
 
+function escapeXml(value) {
+	return String(value ?? '')
+		.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '')
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&apos;');
+}
+
+function excelColumnName(index) {
+	let name = '';
+	while (index > 0) {
+		const remainder = (index - 1) % 26;
+		name = String.fromCharCode(65 + remainder) + name;
+		index = Math.floor((index - 1) / 26);
+	}
+	return name;
+}
+
+function createExcelWorkbook(recordsToExport) {
+	const rows = [
+		FIELD_LABELS,
+		...recordsToExport.map((record) => FIELD_KEYS.map((key) => String(record[key] ?? '')))
+	];
+	const worksheetRows = rows.map((row, rowIndex) => {
+		const cells = row.map((value, columnIndex) => {
+			const reference = `${excelColumnName(columnIndex + 1)}${rowIndex + 1}`;
+			return `<c r="${reference}" t="inlineStr"><is><t xml:space="preserve">${escapeXml(value)}</t></is></c>`;
+		}).join('');
+		return `<row r="${rowIndex + 1}">${cells}</row>`;
+	}).join('');
+	const lastColumn = excelColumnName(FIELD_KEYS.length);
+	const lastRow = rows.length;
+	const files = {
+		'[Content_Types].xml': strToU8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+			'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+			'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+			'<Default Extension="xml" ContentType="application/xml"/>' +
+			'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+			'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' +
+			'</Types>'),
+		'_rels/.rels': strToU8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+			'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+			'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+			'</Relationships>'),
+		'xl/workbook.xml': strToU8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+			'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+			'<sheets><sheet name="سجلات الشحنات" sheetId="1" r:id="rId1"/></sheets></workbook>'),
+		'xl/_rels/workbook.xml.rels': strToU8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+			'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+			'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' +
+			'</Relationships>'),
+		'xl/worksheets/sheet1.xml': strToU8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+			'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+			`<dimension ref="A1:${lastColumn}${lastRow}"/><sheetData>${worksheetRows}</sheetData></worksheet>`)
+	};
+	return zipSync(files);
+}
+
+function exportExcel() {
+	try {
+		const workbook = createExcelWorkbook(records);
+		downloadFile(
+			'سجلات-الشحنات.xlsx',
+			workbook,
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+		);
+		showMessage(appMessage, `تم تصدير ${toArabicNumber(records.length)} سجل إلى Excel.`);
+	} catch (error) {
+		showMessage(appMessage, `تعذر تصدير ملف Excel: ${error.message}`, 'error');
+	}
+}
+
 function downloadSingleRecord(id) {
 	const record = records.find((item) => item.id === id);
 	if (!record) {
@@ -488,6 +563,7 @@ async function importRecords(file, type) {
 	}
 }
 
+document.querySelector('#export-excel').addEventListener('click', exportExcel);
 document.querySelector('#export-csv').addEventListener('click', exportCsv);
 document.querySelector('#export-filtered-csv').addEventListener('click', () => {
 	const filtered = getFilteredRecords();
