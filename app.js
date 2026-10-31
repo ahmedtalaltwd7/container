@@ -8,6 +8,7 @@ const FIELDS = [
 	{ key: 'loadingDate', label: 'تاريخ التحميل', type: 'date' },
 	{ key: 'origin', label: 'الوجهة من', type: 'text' },
 	{ key: 'destination', label: 'الوجهة إلى', type: 'text' },
+	{ key: 'company', label: 'اسم الشركة', type: 'text' },
 	{ key: 'driverName', label: 'اسم السائق', type: 'text' },
 	{ key: 'vehiclePlateNumber', label: 'رقم اللوحة', type: 'text' },
 	{ key: 'unloadingDate', label: 'تاريخ التنزيل', type: 'date' }
@@ -249,7 +250,7 @@ function getFilteredRecords() {
 	return records.filter((record) => {
 		const searchable = [
 			record.containerNumber, record.declarationNumber, record.billOfLadingNumber,
-			record.origin, record.destination, record.driverName, record.vehiclePlateNumber
+			record.origin, record.destination, record.company, record.driverName, record.vehiclePlateNumber
 		].join(' ').toLocaleLowerCase('ar');
 		return (!searchTerm || searchable.includes(searchTerm)) &&
 			Object.entries(dateFilters).every(([key, value]) => !value || record[key] === value);
