@@ -1,4 +1,4 @@
-import { addRecord, addRecords, deleteRecord, getAllRecords, updateRecord } from './db.js';
+import { addRecord, addRecords, deleteAllRecords, deleteRecord, getAllRecords, updateRecord } from './db.js';
 import { strToU8, zipSync } from 'fflate';
 
 const FIELDS = [
@@ -299,6 +299,28 @@ async function removeRecord(id) {
 	}
 }
 
+async function removeAllRecords() {
+	if (!records.length) {
+		showMessage(appMessage, 'لا توجد سجلات لحذفها.', 'error');
+		return;
+	}
+	const confirmation = `تحذير: سيتم حذف جميع السجلات وعددها ${toArabicNumber(records.length)} نهائيًا. لا يمكن التراجع عن هذا الإجراء. هل تريد المتابعة؟`;
+	if (!window.confirm(confirmation)) return;
+
+	const deleteAllButton = document.querySelector('#delete-all-records');
+	deleteAllButton.disabled = true;
+	try {
+		await deleteAllRecords();
+		resetForm();
+		await refreshRecords();
+		showMessage(appMessage, 'تم حذف جميع السجلات بنجاح.');
+	} catch (error) {
+		showMessage(appMessage, `تعذر حذف جميع السجلات: ${error.message}`, 'error');
+	} finally {
+		deleteAllButton.disabled = false;
+	}
+}
+
 form.addEventListener('submit', async (event) => {
 	event.preventDefault();
 	if (saving) return;
@@ -330,6 +352,7 @@ form.addEventListener('submit', async (event) => {
 });
 
 document.querySelector('#clear-button').addEventListener('click', resetForm);
+document.querySelector('#delete-all-records').addEventListener('click', removeAllRecords);
 for (const picker of document.querySelectorAll('.date-picker-input')) {
 	picker.addEventListener('change', () => {
 		picker.closest('.date-input-wrap').querySelector('.date-value').value = picker.value;

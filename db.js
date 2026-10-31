@@ -77,6 +77,10 @@ export function deleteRecord(id) {
 	return runTransaction('readwrite', (store) => store.delete(id));
 }
 
+export function deleteAllRecords() {
+	return runTransaction('readwrite', (store) => store.clear());
+}
+
 export async function addRecords(records) {
 	const database = await openDatabase();
 	return new Promise((resolve, reject) => {
