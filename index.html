@@ -118,7 +118,14 @@
 								<label class="field compact-field"><span>تاريخ التنزيل</span><input id="filter-unloading-date" type="date" /></label>
 								<label class="field compact-field"><span>ترتيب حسب تاريخ البيان</span><select id="sort-order"><option value="newest">الأحدث أولاً</option><option value="oldest">الأقدم أولاً</option></select></label>
 							</div>
-							<div class="filter-footer"><span id="results-count" class="muted"></span><button id="clear-filters" class="text-button" type="button">مسح البحث والفلاتر</button></div>
+							<div class="filter-footer">
+								<span id="results-count" class="muted"></span>
+								<div class="filter-actions">
+									<button id="export-filtered-csv" class="text-button" type="button">تنزيل النتائج CSV</button>
+									<button id="export-all-records-csv" class="text-button" type="button">تنزيل كل السجلات</button>
+									<button id="clear-filters" class="text-button" type="button">مسح البحث والفلاتر</button>
+								</div>
+							</div>
 						</section>
 						<section id="records-container" class="records-container" aria-live="polite"></section>
 					</section>

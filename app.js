@@ -160,6 +160,8 @@ function createActionButton(label, className, action, id) {
 function renderRecords() {
 	const filtered = getFilteredRecords();
 	document.querySelector('#results-count').textContent = `عرض ${toArabicNumber(filtered.length)} من ${toArabicNumber(records.length)} سجل`;
+	document.querySelector('#export-filtered-csv').disabled = filtered.length === 0;
+	document.querySelector('#export-all-records-csv').disabled = records.length === 0;
 	recordsContainer.replaceChildren();
 	if (!filtered.length) {
 		recordsContainer.append(createEmptyState(records.length ? 'لا توجد نتائج مطابقة' : 'لا توجد سجلات محفوظة', records.length ? 'جرّب تغيير كلمات البحث أو الفلاتر.' : 'ابدأ بإضافة سجل شحنة جديد.'));
@@ -194,6 +196,7 @@ function renderRecords() {
 		const actions = document.createElement('td');
 		actions.className = 'table-actions';
 		actions.append(
+			createActionButton('تنزيل CSV', 'action-button download-action', downloadSingleRecord, record.id),
 			createActionButton('تعديل', 'action-button edit-action', openRecord, record.id),
 			createActionButton('حذف', 'action-button delete-action', removeRecord, record.id)
 		);
@@ -224,6 +227,7 @@ function renderRecords() {
 		const actions = document.createElement('div');
 		actions.className = 'card-actions';
 		actions.append(
+			createActionButton('تنزيل CSV', 'button button-download', downloadSingleRecord, record.id),
 			createActionButton('تعديل السجل', 'button button-secondary', openRecord, record.id),
 			createActionButton('حذف', 'button button-danger', removeRecord, record.id)
 		);
@@ -366,11 +370,25 @@ function downloadFile(filename, content, type) {
 	setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function exportCsv() {
-	const lines = [FIELD_LABELS, ...records.map((record) => FIELD_KEYS.map((key) => record[key]))]
+function exportRecordsCsv(recordsToExport, filename, message) {
+	const lines = [FIELD_LABELS, ...recordsToExport.map((record) => FIELD_KEYS.map((key) => record[key]))]
 		.map((row) => row.map(csvEscape).join(','));
-	downloadFile('سجلات-الشحنات.csv', `\uFEFF${lines.join('\r\n')}`, 'text/csv;charset=utf-8');
-	showMessage(appMessage, `تم تصدير ${toArabicNumber(records.length)} سجل إلى CSV.`);
+	downloadFile(filename, `\uFEFF${lines.join('\r\n')}`, 'text/csv;charset=utf-8');
+	showMessage(appMessage, message);
+}
+
+function exportCsv() {
+	exportRecordsCsv(records, 'سجلات-الشحنات.csv', `تم تصدير ${toArabicNumber(records.length)} سجل إلى CSV.`);
+}
+
+function downloadSingleRecord(id) {
+	const record = records.find((item) => item.id === id);
+	if (!record) {
+		showMessage(appMessage, 'تعذر العثور على السجل المطلوب لتنزيله.', 'error');
+		return;
+	}
+	const safeContainerNumber = record.containerNumber.replace(/[<>:"/\\|?*\u0000-\u001F]/g, '-');
+	exportRecordsCsv([record], `سجل-${safeContainerNumber}.csv`, 'تم تنزيل السجل المحدد بصيغة CSV.');
 }
 
 function parseCsv(text) {
@@ -473,6 +491,12 @@ async function importRecords(file, type) {
 }
 
 document.querySelector('#export-csv').addEventListener('click', exportCsv);
+document.querySelector('#export-filtered-csv').addEventListener('click', () => {
+	const filtered = getFilteredRecords();
+	if (!filtered.length) return;
+	exportRecordsCsv(filtered, 'نتائج-البحث-والتصفية.csv', `تم تنزيل ${toArabicNumber(filtered.length)} سجل من النتائج المعروضة.`);
+});
+document.querySelector('#export-all-records-csv').addEventListener('click', exportCsv);
 document.querySelector('#export-json').addEventListener('click', () => {
 	const backup = records.map((record) => onlyRecordFields(record));
 	downloadFile('نسخة-سجلات-الشحنات.json', JSON.stringify(backup, null, 2), 'application/json;charset=utf-8');

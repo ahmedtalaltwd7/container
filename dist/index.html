@@ -9,8 +9,8 @@
 		<link rel="icon" href="/assets/app-icon-yjuuWOrX.svg" type="image/svg+xml" />
 		<link rel="apple-touch-icon" href="/assets/app-icon-192-BKxx8TfM.png" />
 		<title>سِجل | إدارة الشحنات</title>
-		<script type="module" crossorigin src="/assets/index-C-cUhYu-.js"></script>
-		<link rel="stylesheet" crossorigin href="/assets/index-Cwzvx22L.css">
+		<script type="module" crossorigin src="/assets/index-h7Q8pods.js"></script>
+		<link rel="stylesheet" crossorigin href="/assets/index-D5fwxJkR.css">
 	</head>
 	<body>
 		<div class="app-shell">
@@ -119,7 +119,14 @@
 								<label class="field compact-field"><span>تاريخ التنزيل</span><input id="filter-unloading-date" type="date" /></label>
 								<label class="field compact-field"><span>ترتيب حسب تاريخ البيان</span><select id="sort-order"><option value="newest">الأحدث أولاً</option><option value="oldest">الأقدم أولاً</option></select></label>
 							</div>
-							<div class="filter-footer"><span id="results-count" class="muted"></span><button id="clear-filters" class="text-button" type="button">مسح البحث والفلاتر</button></div>
+							<div class="filter-footer">
+								<span id="results-count" class="muted"></span>
+								<div class="filter-actions">
+									<button id="export-filtered-csv" class="text-button" type="button">تنزيل النتائج CSV</button>
+									<button id="export-all-records-csv" class="text-button" type="button">تنزيل كل السجلات</button>
+									<button id="clear-filters" class="text-button" type="button">مسح البحث والفلاتر</button>
+								</div>
+							</div>
 						</section>
 						<section id="records-container" class="records-container" aria-live="polite"></section>
 					</section>
