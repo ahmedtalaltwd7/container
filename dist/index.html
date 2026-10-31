@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="theme-color" content="#103b35" />
+		<meta name="description" content="إدارة سجلات الحاويات والشحنات دون اتصال بالإنترنت" />
+		<link rel="manifest" href="/assets/manifest-C2d9omcp.json" />
+		<link rel="icon" href="/assets/app-icon-yjuuWOrX.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/assets/app-icon-192-BKxx8TfM.png" />
+		<title>سِجل | إدارة الشحنات</title>
+		<script type="module" crossorigin src="/assets/index-C-cUhYu-.js"></script>
+		<link rel="stylesheet" crossorigin href="/assets/index-Cwzvx22L.css">
+	</head>
+	<body>
+		<div class="app-shell">
+			<header class="topbar">
+				<a class="brand" href="#dashboard" aria-label="سِجل - لوحة التحكم">
+					<span class="brand-mark" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="M3.5 7.8 12 12l8.5-4.2M12 12v8.5M7.5 5.2l9 4.6"/></svg>
+					</span>
+					<span><strong>سِجل</strong><small>إدارة الشحنات</small></span>
+				</a>
+				<div class="topbar-actions">
+					<span id="connection-status" class="connection-status" role="status">
+						<span class="status-dot"></span><span id="connection-label">جارٍ التحقق...</span>
+					</span>
+					<button id="install-button" class="button button-outline install-button" type="button" hidden>تثبيت التطبيق</button>
+				</div>
+			</header>
+
+			<div class="page-layout">
+				<aside class="sidebar" aria-label="التنقل الرئيسي">
+					<p class="nav-caption">القائمة الرئيسية</p>
+					<nav class="main-nav">
+						<button class="nav-link active" type="button" data-view="dashboard">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg>
+							<span>لوحة التحكم</span>
+						</button>
+						<button class="nav-link" type="button" data-view="records">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12"/><path d="M3.5 5h.01M3.5 12h.01M3.5 19h.01"/></svg>
+							<span>سجلات الشحنات</span><span id="nav-record-count" class="nav-count">٠</span>
+						</button>
+						<button class="nav-link" type="button" data-view="form">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+							<span>إضافة سجل جديد</span>
+						</button>
+						<button class="nav-link" type="button" data-view="backup">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+							<span>التصدير والنسخ الاحتياطي</span>
+						</button>
+					</nav>
+					<div class="sidebar-note">
+						<span class="note-icon" aria-hidden="true">✓</span>
+						<p><strong>بياناتك محفوظة محلياً</strong><br />لا حاجة إلى اتصال بالإنترنت لإدارة سجلاتك.</p>
+					</div>
+				</aside>
+
+				<main id="main-content" class="main-content">
+					<div id="app-message" class="app-message" role="status" aria-live="polite" hidden></div>
+					<section id="dashboard-view" class="view-section">
+						<div class="page-heading">
+							<div><p class="eyebrow">نظرة عامة</p><h1>لوحة التحكم</h1><p class="muted">مرحباً بك، إليك ملخص سجلات الشحنات المحفوظة على جهازك.</p></div>
+							<button class="button button-primary" type="button" data-view="form"><span aria-hidden="true">＋</span> إضافة سجل جديد</button>
+						</div>
+						<div class="stats-grid">
+							<article class="stat-card stat-primary">
+								<div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="m3.5 7.8 8.5 4.3 8.5-4.3M12 12v8.5"/></svg></div>
+								<div><p>إجمالي السجلات</p><strong id="total-records">٠</strong><small>سجل محفوظ</small></div>
+							</article>
+							<article class="stat-card">
+								<div class="stat-icon icon-sand" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8h13v10H3zM16 11h3l2 3v4h-5z"/><circle cx="7.5" cy="18" r="2"/><circle cx="18.5" cy="18" r="2"/></svg></div>
+								<div><p>الحاويات المسجلة</p><strong id="container-count">٠</strong><small>رقم حاوية فريد</small></div>
+							</article>
+							<article class="stat-card">
+								<div class="stat-icon icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+								<div><p>حالة التخزين</p><strong class="storage-value">محلي</strong><small>IndexedDB على هذا الجهاز</small></div>
+							</article>
+						</div>
+						<section class="panel recent-panel">
+							<div class="panel-heading"><div><h2>أحدث السجلات</h2><p class="muted">آخر ما أُضيف إلى سجلاتك</p></div><button class="text-button" type="button" data-view="records">عرض كل السجلات <span aria-hidden="true">←</span></button></div>
+							<div id="recent-records" class="recent-list"></div>
+						</section>
+					</section>
+
+					<section id="form-view" class="view-section" hidden>
+						<div class="page-heading">
+							<div><p class="eyebrow">إدارة السجلات</p><h1 id="form-title">إضافة سجل جديد</h1><p class="muted">أدخل بيانات الحاوية والشحنة في الحقول التالية.</p></div>
+						</div>
+						<form id="record-form" class="panel record-form" novalidate>
+							<div class="form-section-heading"><span class="section-number">١</span><div><h2>بيانات الشحنة</h2><p class="muted">جميع الحقول مطلوبة</p></div></div>
+							<div class="form-grid">
+								<label class="field"><span>رقم الحاوية <b>*</b></span><input name="containerNumber" type="text" required autocomplete="off" placeholder="مثال: ABCU1234567" /></label>
+								<label class="field"><span>رقم البيان <b>*</b></span><input name="declarationNumber" type="text" required autocomplete="off" placeholder="أدخل رقم البيان" /></label>
+								<label class="field"><span>رقم البوليصة <b>*</b></span><input name="billOfLadingNumber" type="text" required autocomplete="off" placeholder="أدخل رقم البوليصة" /></label>
+								<label class="field"><span>تاريخ البيان <b>*</b></span><input name="declarationDate" type="date" required /></label>
+								<label class="field"><span>تاريخ التحميل <b>*</b></span><input name="loadingDate" type="date" required /></label>
+								<label class="field"><span>الوجهة من <b>*</b></span><input name="origin" type="text" required autocomplete="address-level2" placeholder="مدينة أو ميناء الانطلاق" /></label>
+								<label class="field"><span>الوجهة إلى <b>*</b></span><input name="destination" type="text" required autocomplete="address-level2" placeholder="مدينة أو ميناء الوصول" /></label>
+								<label class="field"><span>اسم السائق <b>*</b></span><input name="driverName" type="text" required autocomplete="name" placeholder="أدخل اسم السائق" /></label>
+								<label class="field"><span>رقم اللوحة <b>*</b></span><input name="vehiclePlateNumber" type="text" required autocomplete="off" placeholder="أدخل رقم اللوحة" /></label>
+								<label class="field"><span>تاريخ التنزيل <b>*</b></span><input name="unloadingDate" type="date" required /></label>
+							</div>
+							<div id="form-message" class="form-message" role="alert" aria-live="polite" hidden></div>
+							<div class="form-actions"><button id="save-button" class="button button-primary" type="submit">حفظ السجل</button><button id="clear-button" class="button button-secondary" type="button">مسح الحقول</button></div>
+						</form>
+					</section>
+
+					<section id="records-view" class="view-section" hidden>
+						<div class="page-heading">
+							<div><p class="eyebrow">قاعدة البيانات المحلية</p><h1>سجلات الشحنات</h1><p class="muted">ابحث في سجلاتك وصفّها أو حدّث بياناتها.</p></div>
+							<button class="button button-primary" type="button" data-view="form"><span aria-hidden="true">＋</span> سجل جديد</button>
+						</div>
+						<section class="panel filters-panel" aria-label="البحث والتصفية">
+							<label class="search-field"><span class="sr-only">ابحث في السجلات</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search-input" type="search" placeholder="ابحث برقم الحاوية أو البيان أو الوجهة أو السائق..." /></label>
+							<div class="filter-row">
+								<label class="field compact-field"><span>تاريخ البيان</span><input id="filter-declaration-date" type="date" /></label>
+								<label class="field compact-field"><span>تاريخ التحميل</span><input id="filter-loading-date" type="date" /></label>
+								<label class="field compact-field"><span>تاريخ التنزيل</span><input id="filter-unloading-date" type="date" /></label>
+								<label class="field compact-field"><span>ترتيب حسب تاريخ البيان</span><select id="sort-order"><option value="newest">الأحدث أولاً</option><option value="oldest">الأقدم أولاً</option></select></label>
+							</div>
+							<div class="filter-footer"><span id="results-count" class="muted"></span><button id="clear-filters" class="text-button" type="button">مسح البحث والفلاتر</button></div>
+						</section>
+						<section id="records-container" class="records-container" aria-live="polite"></section>
+					</section>
+
+					<section id="backup-view" class="view-section" hidden>
+						<div class="page-heading"><div><p class="eyebrow">بياناتك بين يديك</p><h1>التصدير والنسخ الاحتياطي</h1><p class="muted">صدّر سجلاتك أو استعد نسخة محفوظة على جهازك.</p></div></div>
+						<div class="backup-grid">
+							<article class="panel backup-card"><div class="backup-icon" aria-hidden="true">⇩</div><h2>تصدير السجلات</h2><p class="muted">احفظ السجلات كملف CSV متوافق مع Excel أو كنسخة JSON محلية.</p><div class="backup-actions"><button id="export-csv" class="button button-primary" type="button">تصدير CSV</button><button id="export-json" class="button button-secondary" type="button">نسخة JSON</button></div></article>
+							<article class="panel backup-card"><div class="backup-icon backup-icon-light" aria-hidden="true">⇧</div><h2>استيراد السجلات</h2><p class="muted">استعد سجلات من ملف CSV أو نسخة JSON. تُفحص كل البيانات قبل حفظها.</p><label class="field file-field"><span>استيراد من CSV</span><input id="import-csv" type="file" accept=".csv,text/csv" /></label><label class="field file-field"><span>استعادة نسخة JSON</span><input id="import-json" type="file" accept=".json,application/json" /></label></article>
+						</div>
+						<div class="notice-box"><span aria-hidden="true">i</span><p><strong>خصوصيتك أولاً</strong><br />تُحفظ الملفات والسجلات محلياً على جهازك. لا تُرسل أي بيانات إلى خادم أو خدمة خارجية.</p></div>
+					</section>
+				</main>
+			</div>
+
+			<nav class="bottom-nav" aria-label="التنقل الرئيسي">
+				<button class="bottom-link active" type="button" data-view="dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg><span>الرئيسية</span></button>
+				<button class="bottom-link" type="button" data-view="records"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12"/><path d="M3.5 5h.01M3.5 12h.01M3.5 19h.01"/></svg><span>السجلات</span></button>
+				<button class="bottom-link bottom-add" type="button" data-view="form"><span aria-hidden="true">＋</span><span>إضافة</span></button>
+				<button class="bottom-link" type="button" data-view="backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span>النسخ</span></button>
+			</nav>
+		</div>
+	</body>
+</html>
