@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sijil-shell-62f59c873b';
+const CACHE_NAME = 'sijil-shell-a7c6d973e3';
 
 async function cacheableResponse(response) {
 	const body = await response.arrayBuffer();

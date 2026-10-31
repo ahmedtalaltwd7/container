@@ -9,8 +9,8 @@
 		<link rel="icon" href="/assets/app-icon-yjuuWOrX.svg" type="image/svg+xml" />
 		<link rel="apple-touch-icon" href="/assets/app-icon-192-BKxx8TfM.png" />
 		<title>سِجل | إدارة الشحنات</title>
-		<script type="module" crossorigin src="/assets/index-C-rGWWCr.js"></script>
-		<link rel="stylesheet" crossorigin href="/assets/index-D5fwxJkR.css">
+		<script type="module" crossorigin src="/assets/index-DY_VdaqW.js"></script>
+		<link rel="stylesheet" crossorigin href="/assets/index-B1CmGw4A.css">
 	</head>
 	<body>
 		<div class="app-shell">
@@ -88,19 +88,19 @@
 							<div><p class="eyebrow">إدارة السجلات</p><h1 id="form-title">إضافة سجل جديد</h1><p class="muted">أدخل بيانات الحاوية والشحنة في الحقول التالية.</p></div>
 						</div>
 						<form id="record-form" class="panel record-form" novalidate>
-							<div class="form-section-heading"><span class="section-number">١</span><div><h2>بيانات الشحنة</h2><p class="muted">جميع الحقول مطلوبة</p></div></div>
+							<div class="form-section-heading"><span class="section-number">١</span><div><h2>بيانات الشحنة</h2><p class="muted">الحقول ذات النجمة مطلوبة، والتواريخ اختيارية</p></div></div>
 							<div class="form-grid">
 								<label class="field"><span>رقم الحاوية <b>*</b></span><input name="containerNumber" type="text" required autocomplete="off" placeholder="مثال: ABCU1234567" /></label>
 								<label class="field"><span>رقم البيان <b>*</b></span><input name="declarationNumber" type="text" required autocomplete="off" placeholder="أدخل رقم البيان" /></label>
 								<label class="field"><span>رقم البوليصة <b>*</b></span><input name="billOfLadingNumber" type="text" required autocomplete="off" placeholder="أدخل رقم البوليصة" /></label>
-								<label class="field"><span>تاريخ البيان <b>*</b></span><input name="declarationDate" type="date" required /></label>
-								<label class="field"><span>تاريخ التحميل <b>*</b></span><input name="loadingDate" type="date" required /></label>
+								<label class="field"><span>تاريخ البيان</span><div class="date-input-wrap"><input class="date-value" name="declarationDate" type="text" placeholder="يمكن تركه فارغًا أو كتابة أي نص" /><span class="date-picker-icon" aria-hidden="true">▦</span><input class="date-picker-input" type="date" aria-label="اختيار تاريخ البيان من التقويم" tabindex="-1" /></div></label>
+								<label class="field"><span>تاريخ التحميل</span><div class="date-input-wrap"><input class="date-value" name="loadingDate" type="text" placeholder="يمكن تركه فارغًا أو كتابة أي نص" /><span class="date-picker-icon" aria-hidden="true">▦</span><input class="date-picker-input" type="date" aria-label="اختيار تاريخ التحميل من التقويم" tabindex="-1" /></div></label>
 								<label class="field"><span>الوجهة من <b>*</b></span><input name="origin" type="text" required autocomplete="address-level2" placeholder="مدينة أو ميناء الانطلاق" /></label>
 								<label class="field"><span>الوجهة إلى <b>*</b></span><input name="destination" type="text" required autocomplete="address-level2" placeholder="مدينة أو ميناء الوصول" /></label>
 								<label class="field"><span>اسم الشركة <b>*</b></span><input name="company" type="text" required autocomplete="organization" placeholder="أدخل اسم الشركة" /></label>
 								<label class="field"><span>اسم السائق <b>*</b></span><input name="driverName" type="text" required autocomplete="name" placeholder="أدخل اسم السائق" /></label>
 								<label class="field"><span>رقم اللوحة <b>*</b></span><input name="vehiclePlateNumber" type="text" required autocomplete="off" placeholder="أدخل رقم اللوحة" /></label>
-								<label class="field"><span>تاريخ التنزيل <b>*</b></span><input name="unloadingDate" type="date" required /></label>
+								<label class="field"><span>تاريخ التنزيل</span><div class="date-input-wrap"><input class="date-value" name="unloadingDate" type="text" placeholder="يمكن تركه فارغًا أو كتابة أي نص" /><span class="date-picker-icon" aria-hidden="true">▦</span><input class="date-picker-input" type="date" aria-label="اختيار تاريخ التنزيل من التقويم" tabindex="-1" /></div></label>
 							</div>
 							<div id="form-message" class="form-message" role="alert" aria-live="polite" hidden></div>
 							<div class="form-actions"><button id="save-button" class="button button-primary" type="submit">حفظ السجل</button><button id="clear-button" class="button button-secondary" type="button">مسح الحقول</button></div>

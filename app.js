@@ -49,22 +49,15 @@ function onlyRecordFields(source) {
 	return Object.fromEntries(FIELD_KEYS.map((key) => [key, String(source[key] ?? '').trim()]));
 }
 
-function validateRecord(record) {
-	for (const field of FIELDS) {
-		if (!record[field.key]) return `يرجى إدخال ${field.label}.`;
-	}
-	for (const field of FIELDS.filter((item) => item.type === 'date')) {
-		if (!isValidDate(record[field.key])) return `يرجى إدخال تاريخ صحيح في حقل ${field.label}.`;
-	}
-	return '';
+function normalizeDateValue(value) {
+	return String(value ?? '').trim();
 }
 
-function isValidDate(value) {
-	if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-	const [year, month, day] = value.split('-').map(Number);
-	const date = new Date(0);
-	date.setUTCFullYear(year, month - 1, day);
-	return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+function validateRecord(record) {
+	for (const field of FIELDS.filter((item) => item.type !== 'date')) {
+		if (!record[field.key]) return `يرجى إدخال ${field.label}.`;
+	}
+	return '';
 }
 
 async function refreshRecords() {
@@ -126,11 +119,8 @@ function createEmptyState(title, description) {
 }
 
 function formatDate(value) {
-	if (!isValidDate(value)) return '—';
-	const [year, month, day] = value.split('-').map(Number);
-	const date = new Date(0);
-	date.setUTCFullYear(year, month - 1, day);
-	return new Intl.DateTimeFormat('ar', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(date);
+	const normalizedValue = normalizeDateValue(value);
+	return normalizedValue || '—';
 }
 
 function appendRecordFields(parent, record) {
@@ -255,7 +245,7 @@ function getFilteredRecords() {
 		return (!searchTerm || searchable.includes(searchTerm)) &&
 			Object.entries(dateFilters).every(([key, value]) => !value || record[key] === value);
 	}).sort((a, b) => {
-		const dateOrder = a.declarationDate.localeCompare(b.declarationDate);
+		const dateOrder = String(a.declarationDate ?? '').localeCompare(String(b.declarationDate ?? ''));
 		const fallbackOrder = Number(a.id) - Number(b.id);
 		return sortOrder === 'oldest' ? dateOrder || fallbackOrder : -(dateOrder || fallbackOrder);
 	});
@@ -315,7 +305,8 @@ form.addEventListener('submit', async (event) => {
 	const validationMessage = validateRecord(record);
 	if (validationMessage) {
 		showMessage(formMessage, validationMessage, 'error');
-		form.elements.namedItem(FIELD_KEYS.find((key) => !record[key]) || 'declarationDate').focus();
+		const missingField = FIELDS.find((field) => field.type !== 'date' && !record[field.key]);
+		form.elements.namedItem(missingField?.key || 'containerNumber').focus();
 		return;
 	}
 	saving = true;
@@ -338,6 +329,11 @@ form.addEventListener('submit', async (event) => {
 });
 
 document.querySelector('#clear-button').addEventListener('click', resetForm);
+for (const picker of document.querySelectorAll('.date-picker-input')) {
+	picker.addEventListener('change', () => {
+		picker.closest('.date-input-wrap').querySelector('.date-value').value = picker.value;
+	});
+}
 for (const button of document.querySelectorAll('[data-view]')) {
 	button.addEventListener('click', () => {
 		if (button.dataset.view === 'form' && editingId === null) resetForm();
@@ -437,11 +433,12 @@ const FIELD_ALIASES = new Map(FIELDS.flatMap((field) => [
 		loadingDate: 'Loading Date',
 		origin: 'Origin',
 		destination: 'Destination',
+		company: 'Company',
 		driverName: 'Driver Name',
 		vehiclePlateNumber: 'Vehicle Plate Number',
 		unloadingDate: 'Unloading Date'
 	}[field.key], field.key]
-]));
+]))
 
 async function recordsFromCsv(file) {
 	const rows = parseCsv(await file.text());

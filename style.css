@@ -108,7 +108,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .field input, .field select, .search-field input { width: 100%; min-width: 0; height: 43px; padding: 0 12px; border: 1px solid #e3e9e5; border-radius: 7px; outline: 0; background: #fff; color: #34443d; font-size: 12px; }
 .field input::placeholder, .search-field input::placeholder { color: #aab3ae; font-size: 11px; }
 .field input:focus, .field select:focus, .search-field input:focus { border-color: #8fb7a5; box-shadow: 0 0 0 3px #eaf3ed; }
-.field input[type="date"] { direction: rtl; }
+.date-input-wrap { position: relative; min-width: 0; }
+.date-input-wrap .date-value { padding-left: 46px; }
+.date-picker-icon { position: absolute; top: 0; left: 0; width: 43px; height: 100%; display: grid; place-items: center; color: #638174; font-size: 17px; }
+.date-input-wrap .date-picker-input { position: absolute; top: 0; left: 0; width: 43px; height: 100%; padding: 0; opacity: 0; cursor: pointer; }
 .form-actions { display: flex; gap: 10px; margin-top: 25px; padding-top: 19px; border-top: 1px solid #edf0ed; }
 .form-message { margin-top: 18px; padding: 12px 14px; border-radius: 7px; font-size: 12px; line-height: 1.7; }
 .form-message.error, .app-message.error { color: #9e3434; background: #fff0ef; border: 1px solid #f6d8d5; }
